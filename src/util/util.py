@@ -45,6 +45,9 @@ def apply_windowing(image : np.ndarray, window_2d : np.ndarray):
     return image * window_2d
 
 def warp_translation(image : np.ndarray, dy : int, dx : int):
+    """
+        Translate image with different shifts
+    """
 
     assert(len(image.shape) == 2)
     assert(dy < image.shape[0] // 2 and dx < image.shape[1] // 2 )
@@ -58,7 +61,9 @@ def warp_translation(image : np.ndarray, dy : int, dx : int):
     return translated_image
 
 def warp_scale(image : np.ndarray, scale_factor : float):
-
+    """
+        Scale image with different factors
+    """
     assert(len(image.shape) == 2)
     assert(0.5 <= scale_factor <= 1.5)
 
@@ -80,7 +85,9 @@ def warp_scale(image : np.ndarray, scale_factor : float):
     return scaled_image
 
 def warp_rotation(image : np.ndarray, deg : int):
-
+    """
+        Rotate image with different degrees
+    """
     assert(len(image.shape) == 2)
     assert(abs(deg) < 45)
 
