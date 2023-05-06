@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
     # Specify the image sequence directory and file pattern
     # Ex : Suv, ReadTeam, David 
-    image_sequence_dir = "data/Suv/img/"
+    image_sequence_dir = "data/RedTeam/img/"
     image_file_pattern = "*.jpg"
 
     # Get a list of image file paths

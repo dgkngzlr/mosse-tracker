@@ -279,7 +279,6 @@ class MosseTracker:
     def _calc_psr(self):
         """
             See : (Sec. 3.5) in https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf
-            TODO : Optimization need
         """
         begin_time = time.time()
 
@@ -291,28 +290,20 @@ class MosseTracker:
 
         main_lobe_x = max_x
         main_lobe_y = max_y
-        main_lobe_w = 11#int(np.sqrt(self.response_map.shape[0] * self.response_map.shape[1]) / 16)
+        main_lobe_w = int(np.sqrt(self.response_map.shape[0] * self.response_map.shape[1]) / 16)
         main_lobe_w = main_lobe_w + 1 if main_lobe_w % 2 == 0 else main_lobe_w
-        main_lobe_h = 11#int(np.sqrt(self.response_map.shape[0] * self.response_map.shape[1]) / 16)
+        main_lobe_h = int(np.sqrt(self.response_map.shape[0] * self.response_map.shape[1]) / 16)
         main_lobe_h = main_lobe_h + 1 if main_lobe_h % 2 == 0 else main_lobe_h
 
         g_max = self.response_map[main_lobe_y, main_lobe_x]
 
-        sl = []
-        for i in range(self.response_map.shape[0]):
-            for j in range(self.response_map.shape[1]):
+        # Extract side lobe
+        sl_lobe_mask = np.zeros((self.response_map.shape[0], self.response_map.shape[1]), dtype=bool)
+        sl_lobe_mask[main_lobe_y - main_lobe_h // 2 : main_lobe_y + main_lobe_h // 2 + 1,
+                     main_lobe_x - main_lobe_w // 2 : main_lobe_x + main_lobe_w // 2 + 1,] = True
+        sl_lobe_mask = ~sl_lobe_mask
 
-                if j <= main_lobe_x - main_lobe_w // 2:
-                    sl.append(self.response_map[i, j])
-                
-                if j > main_lobe_x + main_lobe_w // 2:
-                    sl.append(self.response_map[i, j])
-                
-                if i <= main_lobe_y - main_lobe_h // 2:
-                    sl.append(self.response_map[i, j])
-                
-                if i > main_lobe_y + main_lobe_h // 2:
-                    sl.append(self.response_map[i, j])
+        sl = self.response_map[np.where(sl_lobe_mask)]
         
         mean_sl = np.mean(sl)
         std_sl = np.std(sl)
